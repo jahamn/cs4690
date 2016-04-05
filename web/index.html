@@ -23,32 +23,32 @@
 <body ng-controller="siqController as siq">
 <div class="container">
    <div class="row" ng-repeat="entry in siq.data">
-      <div class="panel panel-default">
+      <div class="panel panel-default" ng-show="siq.editNum != $index">
          <div class="panel-heading">
             <span ng-click="siq.getEntry($index)" class ="clickable">{{entry.subject}}</span>
                   <span class="pull-right">
-                     <span class="clickable glyphicon glyphicon-pencil text-success" ng-click="siq.getEntry($index)"></span> &nbsp;
                      <span class="clickable glyphicon glyphicon-trash text-danger" ng-click="siq.deleteEntry($index)"></span>
                   </span>
          </div>
          <div class="panel-body" ng-show="siq.panelNum == $index">{{entry.content}}
-            <button class="btn btn-warning">Edit</button>
-         </div>
-         <div>
-            <form>
-               <div class="form-group">
-                  <label for="subject">Subject</label>
-                  <input type="text" class="form-control" id="editSubject" placeholder="Subject" ng-model="entry.subject">
-               </div>
-               <div class="form-group">
-                  <label for="content">Content</label>
-                  <textarea id="editContent" class="form-control" rows="3" ng-model="entry.content"></textarea>
-               </div>
-               <button type="submit" class="btn btn-default" ng-click="siq.updateEntry(entry)">Submit</button>
-            </form>
+            <br />
+            <button class="btn btn-warning" ng-click="siq.editNum = $index">Edit&nbsp;<span class="clickable glyphicon glyphicon-pencil"></span></button>
          </div>
       </div>
-
+      <div ng-if="siq.editNum == $index && siq.panelNum == $index">
+         <form>
+            <div class="form-group">
+               <label for="subject">Subject</label>
+               <input type="text" class="form-control" id="editSubject" placeholder="Subject" ng-model="entry.subject">
+            </div>
+            <div class="form-group">
+               <label for="content">Content</label>
+               <textarea id="editContent" class="form-control" rows="3" ng-model="entry.content"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" ng-click="siq.updateEntry(entry)">Submit</button>
+            <button class="btn btn-danger" ng-click="siq.editNum = false">Cancel</button>
+         </form>
+      </div>
    </div>
 
    <form>
@@ -78,7 +78,7 @@
       siq.panelNum = -1;
 
       siq.getEntry = function(index) {
-         siq.panelNum = index;
+         siq.panelNum = (siq.panelNum == index) ? -1 : index;
          var id = siq.data[index]._id;
          $http.get('http://localhost:3000/api/v1/entries/' + id + '.json')
                  .then(function(response){

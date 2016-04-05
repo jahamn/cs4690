@@ -45,16 +45,16 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(bodyParser.json());
 
-app.use(logger('dev'));
+app.use(logger('dev'))
 
 app.use(compression());
 
 app.use(allowCrossDomain);
 
 var db = [
-    { id:1, "panelHeading":"Foo", "panelBody":"All your base are belong to us!" },
-    { id:2, "panelHeading":"Bar", "panelBody":"I can haz cheesburger?" },
-    { id:3, "panelHeading":"Baz", "panelBody":"Hooked on phonics worked for me!" }
+    { id:1, "subject":"Foo", "content":"All your base are belong to us!" },
+    { id:2, "subject":"Bar", "content":"I can haz cheesburger?" },
+    { id:3, "subject":"Baz", "content":"Hooked on phonics worked for me!" }
 ];
 
 //REST API calls go here.
@@ -67,6 +67,7 @@ app.get('/api/v1/entries.json', function(req, res) {
             if (err) {
                 throw err;
             }
+            console.log(result);
             res.status(200).json(result);
             db.close();
         });
@@ -119,7 +120,7 @@ app.get('/api/v1/entries/:id.json', function(req, res){
      res.status(200).json(rows[0]);
      });
      */
-    var id = req.params.id;
+    var id = new mongo.ObjectId(req.params.id);
     mongoclient.connect('mongodb://localhost:27017/test', function(err, db) {
         if (err) {
             throw err;
@@ -135,7 +136,7 @@ app.get('/api/v1/entries/:id.json', function(req, res){
     });
 });
 
-// Update
+// 
 app.put('/api/v1/entries/:id.json', function(req, res){
     var id = connection.escape(req.params.id);
     console.log(req.body);
