@@ -4,18 +4,18 @@ app.controller('siqController', function($scope, $http){
 	var siq = this;
 	siq.undo = [];
 	
-	$http.get('http://bsedgwick.com:8080/api/v2/entries.json')
+	$http.get('http://localhost:8080/api/v2/entries.json')
 		.then(function(response){
 			siq.data = response.data;
 		});
 	siq.index = -1;
 	siq.panelNum = -1;
-	siq.upsertEntry = function(subject, contents){
+	siq.upsertEntry = function(subject, content){
 		if(siq.operation === 'New Entry'){
-			siq.postEntry(siq.data.length, subject, contents);
+			siq.postEntry(siq.data.length, subject, content);
 		}
 		else{
-			siq.updateEntry(siq.index, subject, contents);
+			siq.updateEntry(siq.index, subject, content);
 		}
 	};
 
@@ -24,7 +24,7 @@ app.controller('siqController', function($scope, $http){
 		siq.operation = 'Edit Entry'; 
 		siq.index = index;
 		siq.siqSubject = siq.data[index].subject;
-		siq.siqContents = siq.data[index].contents;
+		siq.siqContent = siq.data[index].content;
 	};
 
 	siq.getEntry = function(index){
@@ -32,21 +32,21 @@ app.controller('siqController', function($scope, $http){
 		var id = siq.data[index]._id;
 		console.log('getting entry ' + id);
 
-		$http.get('http://bsedgwick.com:8080/api/v2/entries/' + id + '.json')
+		$http.get('http://localhost:8080/api/v2/entries/' + id + '.json')
 			.then(function(response){
 				siq.data[index] = response.data;
 			});
 	};
 
-	siq.updateEntry = function(index, subject, contents){
+	siq.updateEntry = function(index, subject, content){
 		var id = siq.data[index]._id;
 		var entry = {};
 		entry._id = id;
 		entry.subject = subject;
-		entry.contents = contents;
+		entry.content = content;
 		siq.data[index] = entry;
 		siq.clear();
-		$http.put('http://bsedgwick.com:8080/api/v2/entries/' + id + '.json', entry)
+		$http.put('http://localhost:8080/api/v2/entries/' + id + '.json', entry)
 			.then(function(response){
 				console.log("update finished with status '" + response.data + "'");
 			});
@@ -57,7 +57,7 @@ app.controller('siqController', function($scope, $http){
 		var id = siq.data[index]._id;
 		var element = siq.data.splice(index, 1)[0];
 
-		$http.get('http://bsedgwick.com:8080/api/v2/entries/' + id + '.json')
+		$http.get('http://localhost:8080/api/v2/entries/' + id + '.json')
 			.then(function(response){
 				element = response.data;
 				element.index = index;
@@ -65,20 +65,20 @@ app.controller('siqController', function($scope, $http){
 			});
 
 		siq.panelNum = -1;
-		$http.delete('http://bsedgwick.com:8080/api/v2/entries/' + id)
+		$http.delete('http://localhost:8080/api/v2/entries/' + id)
 			.then(function(response){
 				console.log("delete finished with status '" + response.data + "'");
 			});
 	};
 
-	siq.postEntry = function(index, subject, contents){
-		// {"subject":"Something else","contents":"This is the contents for 'Something else'"}
+	siq.postEntry = function(index, subject, content){
+		// {"subject":"Something else","content":"This is the content for 'Something else'"}
 		var entry = {};
 		entry.subject = subject;
-		entry.contents = contents;
+		entry.content = content;
 		siq.clear();
 		console.log(entry);
-		$http.post('http://bsedgwick.com:8080/api/v2/entries.json', entry)
+		$http.post('http://localhost:8080/api/v2/entries.json', entry)
 			.then(function(res){
 				console.log(`success:${res.data}`);
 				entry._id = res.data;
@@ -90,11 +90,11 @@ app.controller('siqController', function($scope, $http){
 
 	siq.Undo = function(){
 		var element = siq.undo.pop();
-		siq.postEntry(element.index, element.subject, element.contents);
+		siq.postEntry(element.index, element.subject, element.content);
 	};
 
 	siq.clear = function(){
-		siq.siqContents = "";
+		siq.siqContent = "";
 		siq.siqSubject = "";
 	};
 });

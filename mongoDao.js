@@ -23,10 +23,10 @@ router.get('/api/v2/entries.json', function(req, res) {
 router.post('/api/v2/entries.json', function(req, res){
     // Store new entry and return id.
     console.log(req.body);
-    // {"subject":"Something else","contents":"This is the contents for 'Something else'"}
+    // {"subject":"Something else","content":"This is the contents for 'Something else'"}
     var newObj = {};
     newObj.subject = req.body.subject;
-    newObj.contents = req.body.contents;
+    newObj.content = req.body.content;
 
     mongoClient.connect('mongodb://localhost:27017/test', function(err, db) {
         if (err) {
@@ -69,11 +69,11 @@ router.put('/api/v2/entries/:id.json', function(req, res){
     var object = {};
     var id = new mongo.ObjectId(req.params.id);
     var subject = req.body.subject;
-    var contents = req.body.contents;
+    var content = req.body.content;
     
     object._id = id;
     object.subject = subject;
-    object.contents = contents;
+    object.content = content;
 
     mongoClient.connect('mongodb://localhost:27017/test', function(err, db) {
         if (err) {
