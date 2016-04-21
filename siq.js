@@ -2,7 +2,7 @@ console.log('Loading Server');
 var fs = require('fs');
 var express = require('express');
 var mongoDao = require('./mongoDao');
-var mysqlDao = require('./mysqlDao');
+//var mysqlDao = require('./mysqlDao');
 
 //modules below are express middleware
 var bodyParser = require('body-parser');
@@ -29,6 +29,7 @@ app.use(compression());
 app.use(allowCrossDomain);
 
 app.use('/', mongoDao);
+//app.use('/', mysqlDao);
 
 
 //traditional webserver stuff for serving static files
