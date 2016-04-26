@@ -72,6 +72,16 @@ router.put('/api/v2/entries/:id.json', function(req, res){
     });
 });
 
+// Delete 
+router.delete('/api/v2/entries/:id', function(req, res){
+    var id = req.params.id;
+    client.del(id,function(err){
+        if(err){throw err};
+    });
+    client.srem('keyset',id,function(err){
+        if(err){throw err};
+    });
+});
 
 
 module.exports = router;
