@@ -46,6 +46,15 @@ router.post('/api/v2/entries.json', function(req,res){
     });
 });
 
+// Read
+router.get('/api/v2/entries/:id.json', function(req, res){
+    var id = req.params.id;
+    client.hgetall(id,function(err,obj){
+        if(err){throw err};
+        res.status(201).json(obj);
+    });
+});
+
 //client.set('keyV','valueV',redis.print);
 /*
 client.set('keyV','valueV',(key, value)=>{
