@@ -42,6 +42,7 @@ router.post('/api/v2/entries.json', function(req,res){
         client.hmset(nextKey,newObj);
         client.sadd('keyset',nextKey,redis.print);
         client.incr('nextkey',redis.print);
+        res.status(201).json(nextKey);
     });
 });
 
