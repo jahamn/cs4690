@@ -55,14 +55,24 @@ router.get('/api/v2/entries/:id.json', function(req, res){
     });
 });
 
-//client.set('keyV','valueV',redis.print);
-/*
-client.set('keyV','valueV',(key, value)=>{
-   console.log('inserted'); 
-   console.log(key);
-   console.log(value);
+// Update
+router.put('/api/v2/entries/:id.json', function(req, res){
+    var object = {};
+    var id = req.params.id;
+    var subject = req.body.subject;
+    var content = req.body.content;
+    
+    object._id = id;
+    object.subject = subject;
+    object.content = content;
+    client.hmset(id,object,function(err,result){
+        if(err){throw err};
+        console.log('Updated: ' + id);
+        res.status(204);
+    });
 });
-*/
+
+
 
 module.exports = router;
 
