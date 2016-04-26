@@ -9,9 +9,7 @@ client.on('error', function(err){
 });
 
 router.get('/api/v2/entries.json', function(req, res){
-    // TODO
     console.log(req.body);
-    
     client.smembers('keyset',function(err,values){
         console.log(values); 
         var all_list = [];
@@ -33,7 +31,18 @@ router.get('/api/v2/entries.json', function(req, res){
 
 // Create
 router.post('/api/v2/entries.json', function(req,res){
-    //console.log(req.body);
+    console.log(req.body);
+    var newObj = {};
+    newObj.subject = req.body.subject;
+    newObj.content = req.body.content;
+    
+    client.get('nextkey',function(err,nextKey){
+        if(err){throw err};
+        newObj._id = nextKey;
+        client.hmset(nextKey,newObj);
+        client.sadd('keyset',nextKey,redis.print);
+        client.incr('nextkey',redis.print);
+    });
 });
 
 //client.set('keyV','valueV',redis.print);
