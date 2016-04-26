@@ -22,7 +22,7 @@ router.get('/api/v2/entries.json', function(req, res){
             client.hgetall(key,function(err,obj){
                 if(err){throw err};
                 console.log(obj);
-                all_list.push(obj);
+                all_list.push({'_id':obj._id,'subject':obj.subject});
                 do_res();
             });
         });
