@@ -65,25 +65,20 @@ router.get('/api/v2/entries/:id.json', function(req, res){
         console.log(obj);
         res.status(201).json(obj);
     });
+});
+
+// Update
+router.put('/api/v2/entries/:id.json', function(req, res){
+    var object = {};
+    var id = req.params.id;
+    var subject = req.body.subject;
+    var content = req.body.content;
     
-    /*
-    mongoClient.connect('mongodb://localhost:27017/test', function(err, db) {
-        if (err) {
-            throw err;
-        }
-        console.log(`Checking mongodb for _id:${id}`);
-        //find({_id:ObjectId("56fab77f6ab3ead947e97973")})
-        db.collection('entries').find({_id:id}).toArray(function(err, result) {
-            if (err) {
-                console.log(`Reading _id ${id} failed: ${err}`)
-                throw err;
-            }
-            console.log(`Reading _id succeeded with result: ${result[0]}`)
-            res.status(201).json(result[0]);
-            db.close();
-        });
+    client.execute('UPDATE ent SET subject = ?, content = ? WHERE id = ?',[subject,content,id],function(err,result){
+        if(err) throw err;
+        res.status(204);
     });
-    */
+    
 });
 
 //init();
