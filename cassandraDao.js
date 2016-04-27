@@ -81,5 +81,13 @@ router.put('/api/v2/entries/:id.json', function(req, res){
     
 });
 
-//init();
+// Delete
+router.delete('/api/v2/entries/:id', function(req, res){
+    var id = req.params.id;
+    client.execute('DELETE FROM ent WHERE id = ?',[id],function(err,result){
+        if(err) throw err;
+        res.status(204);
+    });
+});
+
 module.exports = router;
