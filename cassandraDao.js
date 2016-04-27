@@ -12,10 +12,23 @@ client.execute('SELECT * from ent',function(err,result){
 
 // List
 router.get('/api/v2/entries.json', function(req, res) {
-    client.execute('SELECT * from ent',function(err,result){
+    client.execute('SELECT id,subject from ent',function(err,result){
         if(err) throw err;
         console.log(result.rows);
         res.status(200).json(result.rows);
+    });
+});
+
+
+// Create
+router.post('/api/v2/entries.json', function(req, res){
+    // Store new entry and return id.
+    console.log(req.body);
+    var uuid = cassandra.types.uuid();
+    client.execute('INSERT INTO ent (id, subject, content) VALUES (?,?,?)',[uuid,req.body.subject,req.body.content],function(err,result){
+        if(err) throw err;
+        console.log(result);
+        res.status(201).json(uuid);
     });
 });
 
